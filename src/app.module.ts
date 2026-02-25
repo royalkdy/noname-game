@@ -10,6 +10,7 @@ import { UserService } from '@/user/user.service';
 
 import { AuthModule } from './auth/auth.module';
 import { GameModule } from './game/game.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { GameModule } from './game/game.module';
     UserModule,
     AuthModule,
     GameModule,
+    AdminModule,
   ],
   controllers: [UserController],
   providers: [UserService],

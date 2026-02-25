@@ -24,8 +24,7 @@
     "paths": {
       "@/*": ["src/*"]
     },    
-  },
-  // "include": ["src", "*.mjs", "todo", "prisma/seed.ts"],
-  "include": ["src", "*.mjs", "todo"],
+  },  
+  "include": ["src", "*.mjs", "todo", "prisma.config.ts"],
   "exclude": ["node_modules", "dist"]
 }

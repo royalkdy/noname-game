@@ -25,10 +25,10 @@ export class ItemService implements OnModuleInit {
     //const { userId, itemId } = payload;
     console.log(payload);
     await Promise.resolve();
-
     return {
-      ...payload,
-      remainGold: 100,
+      itemId: 1,
+      quantity: 1,
+      remainGold: 1,
     };
     // return this.prisma.$transaction(async (tx) => {
     //   const item = await tx.item.findUnique({

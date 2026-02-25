@@ -95,9 +95,9 @@ model UserItem{
   item       Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
   createdAt  DateTime @default(now())
-  
-  @@unique([userId, itemId])
+    
   @@index([userId])
+  @@index([itemId])
 }
 
 model OAuthAccount {
