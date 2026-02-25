@@ -1,0 +1,4 @@
+﻿name,description,price,type,grade,slot,stackable,maxStack,sellable,iconUrl
+Gold,재화,0,ETC,COMMON,,TRUE,99999999,FALSE,gold.png
+Iron Sword,기본 검,1000,EQUIPMENT,COMMON,WEAPON,FALSE,,TRUE,sword.png
+HP Potion,체력 회복,100,CONSUMABLE,COMMON,,TRUE,99,TRUE,potion.png

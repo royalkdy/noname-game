@@ -1,0 +1,128 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+enum OAuthProvider {
+  GOOGLE
+  KAKAO
+  NAVER
+}
+
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+  DELETED
+  PENDING
+}
+
+enum ItemType {
+  CONSUMABLE   // 소모품
+  EQUIPMENT    // 장비
+  MATERIAL     // 재료
+  ETC          // 기타
+}
+
+enum ItemGrade {
+  COMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
+enum EquipmentSlot {
+  WEAPON
+  ARMOR
+  HELMET
+  RING
+}
+
+datasource db {
+  provider = "postgresql" 
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  nickname  String    @unique
+  email     String?   @unique
+  password  String?   // 로컬 로그인용 (OAuth면 null)
+
+  status    UserStatus @default(PENDING)
+
+  oauths    OAuthAccount[]
+  emailVerifications EmailVerification[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  items     UserItem[]
+}
+
+model Item {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  price       Int
+
+  type        ItemType
+  grade       ItemGrade
+
+  slot        EquipmentSlot?   // 장비 전용
+  stackable   Boolean     @default(true)
+  maxStack    Int?
+
+  sellable    Boolean     @default(true)
+
+  iconUrl     String?
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  userItems   UserItem[]
+}
+
+model UserItem{
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  itemId     Int
+  quantity   Int      @default(1)
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item       Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now())
+  
+  @@unique([userId, itemId])
+  @@index([userId])
+}
+
+model OAuthAccount {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  provider        OAuthProvider
+  providerUserId  String
+
+  createdAt       DateTime @default(now())
+
+  @@unique([provider, providerUserId])
+  @@index([userId])
+}
+
+model EmailVerification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  token     String   @unique
+  expiresAt DateTime
+  verified  Boolean  @default(false)
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
