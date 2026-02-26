@@ -35,7 +35,7 @@ async function main() {
   const items: RawItemCsvRow[] = [];
 
   await new Promise<void>((resolve) => {
-    fs.createReadStream('prisma/ItemData.csv')
+    fs.createReadStream('./src/temp/ItemData.csv')
       .pipe(csv({ mapHeaders: ({ header }) => header.trim() }))
       .on('data', (row: RawItemCsvRow) => items.push(row))
       .on('end', resolve);
@@ -43,9 +43,8 @@ async function main() {
 
   // 기존 데이터 삭제
   await prisma.$executeRawUnsafe(
-    `TRUNCATE TABLE "Item" RESTART IDENTITY CASCADE`,
+    `TRUNCATE TABLE game."Item" RESTART IDENTITY CASCADE`,
   );
-  //   await prisma.item.deleteMany();
 
   const data = items.map((row) => ({
     name: row.name,

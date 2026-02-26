@@ -17,7 +17,6 @@ export class UserService {
         id: true,
         email: true,
         status: true,
-        nickname: true,
       },
     });
 
@@ -37,7 +36,6 @@ export class UserService {
         id: true,
         email: true,
         status: true,
-        nickname: true,
       },
     });
     if (!user) {
@@ -55,7 +53,6 @@ export class UserService {
         id: true,
         email: true,
         status: true,
-        nickname: true,
         password: true,
       },
     });
@@ -70,13 +67,11 @@ export class UserService {
       data: {
         email,
         password,
-        nickname,
       },
       select: {
         id: true,
         email: true,
         status: true,
-        nickname: true,
       },
     });
     return user;
@@ -95,7 +90,6 @@ export class UserService {
           select: {
             id: true,
             email: true,
-            nickname: true,
             status: true,
           },
         },
@@ -107,7 +101,6 @@ export class UserService {
     return await this.prisma.user.create({
       data: {
         email: data.email,
-        nickname: data.nickname ?? `user_${data.providerUserId.slice(0, 6)}`,
         // OAuth는 이메일 인증이 불필요 바로 활성화
         status: UserStatus.ACTIVE,
         oauths: {
