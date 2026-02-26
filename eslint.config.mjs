@@ -25,7 +25,7 @@ export default [
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        project: './tsconfig.json', // ✅ 안정 모드
+        project: './tsconfig.eslint.json', // ✅ 안정 모드
         tsconfigRootDir: import.meta.dirname,
       },
       globals: {
