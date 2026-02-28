@@ -9,7 +9,7 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findByUserId(id: number) {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.userAccount.findUnique({
       where: {
         id: id,
       },
@@ -28,7 +28,7 @@ export class UserService {
   }
 
   async findByEmail(email: string) {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.userAccount.findUnique({
       where: {
         email,
       },
@@ -45,7 +45,7 @@ export class UserService {
   }
 
   async findUserWithPasswordByEmail(email: string) {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.userAccount.findUnique({
       where: {
         email,
       },
@@ -63,7 +63,7 @@ export class UserService {
   }
 
   async createLocalUser(email: string, password: string) {
-    const user = await this.prisma.user.create({
+    const user = await this.prisma.userAccount.create({
       data: {
         email,
         password,
@@ -98,7 +98,7 @@ export class UserService {
   }
 
   async createOAuthUser(data: OAuthPayload) {
-    return await this.prisma.user.create({
+    return await this.prisma.userAccount.create({
       data: {
         email: data.email,
         // OAuth는 이메일 인증이 불필요 바로 활성화
