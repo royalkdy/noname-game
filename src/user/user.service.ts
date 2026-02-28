@@ -62,7 +62,7 @@ export class UserService {
     return user;
   }
 
-  async createLocalUser(email: string, password: string, nickname: string) {
+  async createLocalUser(email: string, password: string) {
     const user = await this.prisma.user.create({
       data: {
         email,

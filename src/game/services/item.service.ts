@@ -15,14 +15,13 @@ export class ItemService implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    this.dispatcher.register(GameAction.BUY_ITEM, this.buy.bind(this));
-    this.dispatcher.register(GameAction.SELL_ITEM, this.sell.bind(this));
+    this.dispatcher.register(GameAction.BUY_ITEM, this.buy);
+    this.dispatcher.register(GameAction.SELL_ITEM, this.sell);
   }
 
-  async buy(
+  buy = async (
     payload: GameRequest<GameAction.BUY_ITEM>,
-  ): Promise<GameResponse<GameAction.BUY_ITEM>> {
-    //const { userId, itemId } = payload;
+  ): Promise<GameResponse<GameAction.BUY_ITEM>> => {
     console.log(payload);
     await Promise.resolve();
     return {
@@ -30,38 +29,50 @@ export class ItemService implements OnModuleInit {
       quantity: 1,
       remainGold: 1,
     };
-    // return this.prisma.$transaction(async (tx) => {
-    //   const item = await tx.item.findUnique({
-    //     where: { id: itemId },
-    //   });
+  };
 
-    //   if (!item) throw new Error('ITEM_NOT_FOUND');
+  // async buy(
+  //   payload: GameRequest<GameAction.BUY_ITEM>,
+  // ): Promise<GameResponse<GameAction.BUY_ITEM>> {
+  //   //const { userId, itemId } = payload;
+  //   console.log(payload);
+  //   await Promise.resolve();
+  //   return {
+  //     itemId: 1,
+  //     quantity: 1,
+  //     remainGold: 1,
+  //   };
+  //   // return this.prisma.$transaction(async (tx) => {
+  //   //   const item = await tx.item.findUnique({
+  //   //     where: { id: itemId },
+  //   //   });
 
-    //   const updated = await tx.user.updateMany({
-    //     where: {
-    //       id: userId,
-    //       gold: { gte: item.price },
-    //     },
-    //     data: {
-    //       gold: { decrement: item.price },
-    //     },
-    //   });
+  //   //   if (!item) throw new Error('ITEM_NOT_FOUND');
 
-    //   if (updated.count === 0) {
-    //     throw new Error('NOT_ENOUGH_GOLD');
-    //   }
+  //   //   const updated = await tx.user.updateMany({
+  //   //     where: {
+  //   //       id: userId,
+  //   //       gold: { gte: item.price },
+  //   //     },
+  //   //     data: {
+  //   //       gold: { decrement: item.price },
+  //   //     },
+  //   //   });
 
-    //   await tx.inventory.create({
-    //     data: { userId, itemId },
-    //   });
+  //   //   if (updated.count === 0) {
+  //   //     throw new Error('NOT_ENOUGH_GOLD');
+  //   //   }
 
-    //   return { success: true };
-    // });
-  }
+  //   //   await tx.inventory.create({
+  //   //     data: { userId, itemId },
+  //   //   });
 
-  async sell(
+  //   //   return { success: true };
+  //   // });
+  // }
+  sell = async (
     payload: GameRequest<GameAction.SELL_ITEM>,
-  ): Promise<GameResponse<GameAction.SELL_ITEM>> {
+  ): Promise<GameResponse<GameAction.SELL_ITEM>> => {
     console.log(payload);
     await Promise.resolve();
     return {
@@ -69,20 +80,31 @@ export class ItemService implements OnModuleInit {
       quantity: 1,
       remainGold: 1,
     };
-    // const { userId, itemId } = payload;
-    // return this.prisma.$transaction(async (tx) => {
-    //   const inventory = await tx.inventory.findFirst({
-    //     where: { userId, itemId },
-    //   });
-    //   if (!inventory) throw new Error('ITEM_NOT_OWNED');
-    //   await tx.inventory.delete({
-    //     where: { id: inventory.id },
-    //   });
-    //   await tx.user.update({
-    //     where: { id: userId },
-    //     data: { gold: { increment: 50 } },
-    //   });
-    //   return { success: true };
-    // });
-  }
+  };
+  // async sell(
+  //   payload: GameRequest<GameAction.SELL_ITEM>,
+  // ): Promise<GameResponse<GameAction.SELL_ITEM>> {
+  //   console.log(payload);
+  //   await Promise.resolve();
+  //   return {
+  //     itemId: 1,
+  //     quantity: 1,
+  //     remainGold: 1,
+  //   };
+  //   // const { userId, itemId } = payload;
+  //   // return this.prisma.$transaction(async (tx) => {
+  //   //   const inventory = await tx.inventory.findFirst({
+  //   //     where: { userId, itemId },
+  //   //   });
+  //   //   if (!inventory) throw new Error('ITEM_NOT_OWNED');
+  //   //   await tx.inventory.delete({
+  //   //     where: { id: inventory.id },
+  //   //   });
+  //   //   await tx.user.update({
+  //   //     where: { id: userId },
+  //   //     data: { gold: { increment: 50 } },
+  //   //   });
+  //   //   return { success: true };
+  //   // });
+  // }
 }
