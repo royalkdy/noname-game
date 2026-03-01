@@ -73,7 +73,8 @@ export class ItemService implements OnModuleInit {
   sell = async (
     payload: GameRequest<GameAction.SELL_ITEM>,
   ): Promise<GameResponse<GameAction.SELL_ITEM>> => {
-    console.log(payload);
+    console.log(payload.userId);
+
     await Promise.resolve();
     return {
       itemId: 1,

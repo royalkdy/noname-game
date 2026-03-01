@@ -1,11 +1,8 @@
 import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import {
-  LoggerService,
-  AuthLoggerService,
-} from '@/common/logger/logger.service';
+import { LoggerService } from '@/common/logger/logger.service';
 import { GlobalExceptionFilter } from '@/common/exception/global-exception.filter';
-import { SuccessResponseInterceptor } from './interceptors/success-response.interceptor';
+import { ApiResponseInterceptor } from './interceptors/success-response.interceptor';
 
 @Module({
   providers: [
@@ -16,10 +13,9 @@ import { SuccessResponseInterceptor } from './interceptors/success-response.inte
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: SuccessResponseInterceptor,
+      useClass: ApiResponseInterceptor,
     },
-    AuthLoggerService,
   ],
-  exports: [LoggerService, AuthLoggerService],
+  exports: [LoggerService],
 })
 export class CommonModule {}

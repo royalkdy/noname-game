@@ -10,3 +10,8 @@ export enum OAuthProvider {
   KAKAO = 'KAKAO',
   NAVER = 'NAVER',
 }
+
+export type AuthenticatedUser = {
+  id: number;
+  nickname: string;
+};

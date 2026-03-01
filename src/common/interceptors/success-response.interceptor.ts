@@ -5,52 +5,80 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { LoggerService } from '../logger/logger.service';
-import dayjs from 'dayjs';
+import dayjs from '@/common/utils/dayjs.util';
+import { Reflector } from '@nestjs/core/services/reflector.service';
 
 interface ApiResponse<T> {
   success: boolean;
-  // statusCode: number;
-  // path: string;
-  // method: string;
   data: T;
   dateTime: string;
 }
 
 @Injectable()
-export class SuccessResponseInterceptor<T> implements NestInterceptor<
+export class ApiResponseInterceptor<T> implements NestInterceptor<
   T,
   ApiResponse<T>
 > {
-  constructor(private readonly logger: LoggerService) {}
+  constructor(
+    private readonly logger: LoggerService,
+    private readonly reflector: Reflector,
+  ) {}
+
   intercept(
     context: ExecutionContext,
     next: CallHandler<T>,
   ): Observable<ApiResponse<T>> {
     const http = context.switchToHttp();
-    // const response = http.getResponse<Response>();
     const request = http.getRequest<Request>();
+    const user = request.user as { id: number };
 
-    const userId = (request.user as { id: number })?.id;
+    const requestBody =
+      typeof request.body === 'object' && request.body !== null
+        ? (request.body as Record<string, unknown>)
+        : {};
+
+    const requestTime = dayjs().tz();
+    const logMessage =
+      'API:[REQUEST] ' +
+      JSON.stringify({
+        id: request.requestId,
+        date: requestTime.format('YYYY-MM-DD HH:mm:ss'),
+        userId: user.id,
+        path: request.path,
+        request: requestBody,
+      }) +
+      '\n';
+    // Request
+    console.log(logMessage);
+    this.logger.writeApiLog(logMessage);
+
     return next.handle().pipe(
-      tap((data) => {
-        const logDateTime = dayjs().format('YYYY-MM-DD HH:mm:ss');
-        const requestData = JSON.stringify(request.body);
-        const responseData = JSON.stringify(data);
-        const uid = userId ?? 'ANONYMOUS';
-        let debugLogMessage = `${logDateTime} UID:${uid} path:${request.url} method:${request.method} `;
-        if (request.method === 'POST')
-          debugLogMessage += `request:${requestData} `;
-        debugLogMessage += `response:${responseData}`;
-        this.logger.userActionLog(debugLogMessage);
+      map((data) => {
+        const responseTime = dayjs().tz();
+        const elapsedTimeMs = responseTime.diff(requestTime, 'millisecond');
+        const logMessage =
+          'API:[RESPONSE] ' +
+          JSON.stringify({
+            id: request.requestId,
+            date: responseTime.format('YYYY-MM-DD HH:mm:ss'),
+            userId: user.id,
+            path: request.path,
+            response: data,
+            elapsedTimeMs,
+          }) +
+          '\n';
+        console.log(logMessage);
+        this.logger.writeApiLog(logMessage);
+
+        return {
+          success: true,
+          data,
+          dateTime: responseTime.format('YYYY-MM-DD HH:mm:ss'),
+        };
       }),
-      map((data) => ({
-        success: true,
-        data,
-        dateTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      })),
     );
   }
 }

@@ -15,10 +15,10 @@ export class SessionSerializer extends PassportSerializer {
     done(null, userId);
   }
 
-  async deserializeUser(
+  deserializeUser(
     userId: number,
-    done: (err: Error | null, userId: number | null) => void,
-  ): Promise<void> {
-    done(null, userId);
+    done: (err: Error | null, user: { id: number | null }) => void,
+  ): void {
+    done(null, { id: userId });
   }
 }
