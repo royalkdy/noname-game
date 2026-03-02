@@ -1,10 +1,6 @@
 import { Injectable, BadRequestException, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from '@/common/prisma/prisma.service';
 import {
-  CreateUserProfileRequestDto,
-  CreateUserProfileResponseDto,
-} from '../dto/user-profile.dto';
-import {
   GameAction,
   GameRequest,
   GameResponse,

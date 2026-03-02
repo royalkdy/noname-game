@@ -22,12 +22,11 @@ export class ItemService implements OnModuleInit {
   buy = async (
     payload: GameRequest<GameAction.BUY_ITEM>,
   ): Promise<GameResponse<GameAction.BUY_ITEM>> => {
-    console.log(payload);
     await Promise.resolve();
     return {
-      itemId: 1,
-      quantity: 1,
-      remainGold: 1,
+      itemId: payload.itemId,
+      quantity: payload.quantity,
+      remainGold: 999999,
     };
   };
 
