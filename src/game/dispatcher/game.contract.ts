@@ -1,3 +1,6 @@
+// api추가방법 game/dto에 request, response dto정의 => game.contract.ts에 contract작성 => game.module.ts에 handler등록
+// dto import, contract정의, handler는 gamemodule에서 등록
+
 import { BuyItemRequestDto, BuyItemResponseDto } from '@/game/dto/buy-item.dto';
 import {
   CreateUserProfileRequestDto,
@@ -14,8 +17,7 @@ export enum GameAction {
   CREATE_USER_PROFILE = 'CREATE_USER_PROFILE',
 }
 
-// 런타임 + 타입을 동시에 가지는 단일 소스
-export const GameActionContractMap = {
+export const GameContractMap = {
   [GameAction.BUY_ITEM]: {
     request: BuyItemRequestDto,
     response: BuyItemResponseDto,
@@ -30,16 +32,18 @@ export const GameActionContractMap = {
   },
 } as const;
 
-// 타입 자동 추론
-export type GameActionMap = {
-  [K in keyof typeof GameActionContractMap]: {
-    request: InstanceType<(typeof GameActionContractMap)[K]['request']>;
-    response: InstanceType<(typeof GameActionContractMap)[K]['response']>;
-  };
-};
+export type GameRequest<Action extends GameAction> = InstanceType<
+  (typeof GameContractMap)[Action]['request']
+> & { userId: number };
 
-// export type GameRequest<T extends GameAction> = GameActionMap[T]['request'];
-export type GameRequest<T extends GameAction> = GameActionMap[T]['request'] & {
-  userId: number;
+export type GameResponse<Action extends GameAction> = InstanceType<
+  (typeof GameContractMap)[Action]['response']
+>;
+
+export type GameHandler<Action extends GameAction> = (
+  request: GameRequest<Action>,
+) => Promise<GameResponse<Action>>;
+
+export type HandlerMap = {
+  [Action in GameAction]: GameHandler<Action>;
 };
-export type GameResponse<T extends GameAction> = GameActionMap[T]['response'];

@@ -6,12 +6,8 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { GameDispatcher } from './dispatcher/game.dispatcher';
-import {
-  GameAction,
-  GameActionContractMap,
-  GameRequest,
-} from './dispatcher/game-action.types';
-import { ClassConstructor, plainToInstance } from 'class-transformer';
+import { GameAction, GameContractMap } from './dispatcher/game.contract';
+import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import type { Request } from 'express';
 
@@ -48,17 +44,16 @@ export class GameController {
     payload: unknown,
     userId: number,
   ) {
-    const contract = GameActionContractMap[action];
-
-    if (typeof payload !== 'object' || payload === null) {
-      throw new BadRequestException('INVALID_PAYLOAD');
-    }
-
+    // payload => DTO class로 변환
+    const contract = GameContractMap[action];
     const dto = plainToInstance(
-      contract.request as ClassConstructor<any>,
+      contract.request as new () => InstanceType<
+        (typeof GameContractMap)[T]['request']
+      >,
       payload,
-    ) as GameRequest<T>;
+    );
 
+    // dto 검증
     const errors = await validate(dto);
     if (errors.length > 0) {
       throw new BadRequestException(errors);

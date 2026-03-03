@@ -1,25 +1,14 @@
-import { Injectable, BadRequestException, OnModuleInit } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '@/common/prisma/prisma.service';
 import {
   GameAction,
   GameRequest,
   GameResponse,
-} from '../dispatcher/game-action.types';
-import { GameDispatcher } from '../dispatcher/game.dispatcher';
+} from '../dispatcher/game.contract';
 
 @Injectable()
-export class UserProfileService implements OnModuleInit {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly dispatcher: GameDispatcher,
-  ) {}
-
-  onModuleInit() {
-    this.dispatcher.register(
-      GameAction.CREATE_USER_PROFILE,
-      this.createUserProfile,
-    );
-  }
+export class UserProfileService {
+  constructor(private readonly prisma: PrismaService) {}
 
   createUserProfile = async (
     payload: GameRequest<GameAction.CREATE_USER_PROFILE>,

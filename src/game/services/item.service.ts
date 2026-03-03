@@ -1,25 +1,13 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
-import { PrismaService } from '@/common/prisma/prisma.service';
-import { GameDispatcher } from '../dispatcher/game.dispatcher';
+import { Injectable } from '@nestjs/common';
 import {
   GameAction,
   GameRequest,
   GameResponse,
-} from '../dispatcher/game-action.types';
+} from '../dispatcher/game.contract';
 
 @Injectable()
-export class ItemService implements OnModuleInit {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly dispatcher: GameDispatcher,
-  ) {}
-
-  onModuleInit() {
-    this.dispatcher.register(GameAction.BUY_ITEM, this.buy);
-    this.dispatcher.register(GameAction.SELL_ITEM, this.sell);
-  }
-
-  buy = async (
+export class ItemService {
+  buyItem = async (
     payload: GameRequest<GameAction.BUY_ITEM>,
   ): Promise<GameResponse<GameAction.BUY_ITEM>> => {
     await Promise.resolve();
@@ -69,7 +57,7 @@ export class ItemService implements OnModuleInit {
   //   //   return { success: true };
   //   // });
   // }
-  sell = async (
+  sellItem = async (
     payload: GameRequest<GameAction.SELL_ITEM>,
   ): Promise<GameResponse<GameAction.SELL_ITEM>> => {
     console.log(payload.userId);
