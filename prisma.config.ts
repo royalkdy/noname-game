@@ -10,7 +10,7 @@ export default defineConfig({
     seed: 'ts-node ./src/temp/seed.ts',
   },
   datasource: {
-    url: process.env.POSTGRESQL_DATABASE_URL,
-    shadowDatabaseUrl: process.env.POSTGRESQL_SHADOW_DATABASE_URL,
+    url: process.env.GAME_DATABASE_URL,
+    shadowDatabaseUrl: process.env.GAME_SHADOW_DATABASE_URL,
   },
 });

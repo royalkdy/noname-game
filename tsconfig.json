@@ -3,7 +3,7 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "target": "ES2023",
-
+    "types": ["node"],
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,

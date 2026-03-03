@@ -8,23 +8,26 @@ import {
 
 @Injectable()
 export class UserProfileService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   createUserProfile = async (
     payload: GameRequest<GameAction.CREATE_USER_PROFILE>,
   ): Promise<GameResponse<GameAction.CREATE_USER_PROFILE>> => {
     // 닉네임 중복 확인
-    const nicknameExists = await this.prisma.userProfile.findUnique({
+    const nicknameExists = await this.prismaService.userProfile.findUnique({
       where: { nickname: payload.nickname },
     });
+
+    console.log('UserId:', payload.userId);
+    console.log('nickname:', payload.nickname);
 
     if (nicknameExists) {
       throw new BadRequestException('NICKNAME_ALREADY_EXISTS');
     }
 
-    return this.prisma.userProfile.create({
+    return this.prismaService.userProfile.create({
       data: {
-        id: payload.userId,
+        accountId: payload.userId,
         nickname: payload.nickname,
       },
     });

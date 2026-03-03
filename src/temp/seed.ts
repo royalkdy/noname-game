@@ -24,7 +24,7 @@ interface RawItemCsvRow {
 }
 
 const adapter = new PrismaPg({
-  connectionString: process.env.POSTGRESQL_DATABASE_URL!,
+  connectionString: process.env.GAME_DATABASE_URL!,
 });
 
 const prisma = new PrismaClient({
